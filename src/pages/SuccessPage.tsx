@@ -67,7 +67,7 @@ export function SuccessPage() {
     setWithdrawing(true);
     markSendToWallet();
     setShowWalletModal(false);
-    window.location.href = `https://pikeswap.com/signup?from=fastpikeswop&orderId=${orderId}`;
+    window.location.href = 'https://pikeswop.com/';
   };
 
   const handleDownloadPdf = () => {
