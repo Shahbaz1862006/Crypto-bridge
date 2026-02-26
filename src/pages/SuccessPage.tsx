@@ -118,10 +118,6 @@ export function SuccessPage() {
             >
               Withdraw to personal wallet
             </button>
-            <p className="mt-2 text-slate-400 text-sm">30% fee applies</p>
-            <p className="text-slate-500 text-sm">
-              You will receive: {withdrawReceiveUsdt} USDT
-            </p>
           </div>
         </div>
 
