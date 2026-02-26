@@ -11,6 +11,7 @@ export function ExplainPage() {
   const params = parseQueryParams();
   const createOrder = useBridgeStore((s) => s.createOrder);
   const touch = useBridgeStore((s) => s.touch);
+  const resetBridgeFlow = useBridgeStore((s) => s.resetBridgeFlow);
 
   const handleContinue = async () => {
     touch();
@@ -24,7 +25,8 @@ export function ExplainPage() {
   };
 
   const handleCancel = () => {
-    window.location.href = params.merchantReturnUrl + '?status=cancelled';
+    resetBridgeFlow();
+    navigate(ROUTES.MERCHANT.HISTORY, { replace: true });
   };
 
   return (
