@@ -1,10 +1,10 @@
 import { CopyButton } from './CopyButton';
 import { maskReference, formatCoolingLabel, formatReceiptDate } from '../utils/receipt';
-import type { BridgeOrder, MerchantTx } from '../store/types';
+import type { BridgeOrder } from '../store/types';
 
 interface ReceiptCardProps {
   order: BridgeOrder;
-  merchantTx: MerchantTx | null;
+  merchantTx?: unknown;
   onCopyReceipt?: (text: string) => void;
   onDownloadPdf?: () => void;
 }
@@ -38,7 +38,6 @@ function formatReceiptText(order: BridgeOrder): string {
 
 export function ReceiptCard({
   order,
-  merchantTx,
   onCopyReceipt,
   onDownloadPdf,
 }: ReceiptCardProps) {
