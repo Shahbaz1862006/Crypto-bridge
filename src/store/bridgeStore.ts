@@ -110,6 +110,8 @@ interface BridgeStore extends StoreState {
   seedMerchantHistoryIfEmpty: () => void;
 
   addHistoryTx: (tx: Omit<MerchantTx, 'id'>) => string;
+  /** Ensure tx exists in history (for demo row clicks); adds if not present */
+  ensureTxInHistory: (tx: MerchantTx) => void;
   updateHistoryTxStatus: (id: string, status: TxStatus, failureReason?: string) => void;
   updateMerchantTxDescription: (id: string, description: string) => void;
   ensureMerchantTxForSuccess: () => void;
@@ -123,7 +125,7 @@ interface BridgeStore extends StoreState {
   /** Resume cooling from a tx in history (when user clicks PENDING row) */
   resumeCoolingFromTx: (txId: string) => boolean;
   /** Reset bridge flow for fresh deposit; preserves wallet and merchantHistory */
-  resetBridgeFlow: (opts?: { preserveWalletAndHistory?: boolean }) => void;
+  resetBridgeFlow: (opts?: { preserveWalletAndHistory?: boolean; preserveHistory?: boolean }) => void;
 }
 
 export const useBridgeStore = create<BridgeStore>()(
@@ -163,15 +165,27 @@ export const useBridgeStore = create<BridgeStore>()(
           }));
         },
 
-        selectUPI: () =>
+        selectUPI: () => {
+          const upiBeneficiary: Beneficiary = {
+            id: 'UPI-FIXED',
+            displayName: 'Rapido Gate Collections',
+            bankName: 'HDFC Bank',
+            accountNumberMasked: 'rapidogate@hdfc',
+            ifsc: 'HDFC0001234',
+          };
           set((s) => ({
             order: {
               ...s.order,
               paymentMethod: 'UPI',
+              referenceType: 'UTR',
               invoiceStatus: 'AWAITING_PAYMENT',
+              expectedInrAmount: s.order.inrAmount,
+              selectedBeneficiaryId: upiBeneficiary.id,
+              selectedBeneficiary: upiBeneficiary,
               lastActiveAt: Date.now(),
             },
-          })),
+          }));
+        },
 
         selectBANK: () =>
           set((s) => ({
@@ -517,12 +531,13 @@ export const useBridgeStore = create<BridgeStore>()(
           }),
 
         resetBridgeFlow: (opts = {}) => {
-          const { preserveWalletAndHistory = true } = opts;
+          const { preserveWalletAndHistory = true, preserveHistory } = opts;
+          const preserve = preserveWalletAndHistory || preserveHistory !== false;
           const { merchantHistory, wallet } = get();
           set((s) => ({
             order: createEmptyOrder(),
-            merchantHistory: preserveWalletAndHistory ? merchantHistory : s.merchantHistory,
-            wallet: preserveWalletAndHistory ? (wallet ?? s.wallet) : s.wallet,
+            merchantHistory: preserve ? merchantHistory : s.merchantHistory,
+            wallet: preserve ? (wallet ?? s.wallet) : s.wallet,
             usedReferences: s.usedReferences,
             dev: s.dev,
           }));
@@ -651,6 +666,15 @@ export const useBridgeStore = create<BridgeStore>()(
             merchantHistory: [newTx, ...s.merchantHistory],
           }));
           return id;
+        },
+
+        ensureTxInHistory: (tx) => {
+          const exists = get().merchantHistory.some((t) => t.id === tx.id);
+          if (!exists) {
+            set((s) => ({
+              merchantHistory: [tx, ...s.merchantHistory],
+            }));
+          }
         },
 
         updateHistoryTxStatus: (id, status, failureReason) => {

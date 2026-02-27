@@ -51,7 +51,7 @@ export function ConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
@@ -62,18 +62,18 @@ export function ConfirmModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-xl bg-slate-800 border border-slate-600 p-6 shadow-2xl"
+        className="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-[var(--shadow)]"
       >
-        <h2 id="confirm-modal-title" className="text-xl font-semibold text-white mb-4">
+        <h2 id="confirm-modal-title" className="text-xl font-semibold text-[var(--text)] mb-4">
           {title}
         </h2>
-        <div className="text-slate-400 text-sm mb-6">{message}</div>
+        <div className="text-[var(--muted)] text-sm mb-6">{message}</div>
         <div className="flex flex-col gap-2">
           <button
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="min-h-[44px] w-full rounded-xl bg-primary text-black font-semibold hover:bg-primary/90 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing…' : confirmLabel}
           </button>
@@ -81,7 +81,7 @@ export function ConfirmModal({
             type="button"
             onClick={handleClose}
             disabled={loading}
-            className="min-h-[44px] w-full rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800 disabled:opacity-70"
+            className="min-h-[44px] w-full rounded-xl border border-[var(--border)] text-[var(--muted)] hover:bg-gray-100 disabled:opacity-70"
           >
             {cancelLabel}
           </button>

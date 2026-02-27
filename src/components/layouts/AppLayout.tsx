@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
  */
 export function AppLayout() {
   return (
-    <div className="min-h-screen bg-[#0B1220] text-white">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Outlet />
     </div>
   );

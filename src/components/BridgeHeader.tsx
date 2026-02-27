@@ -6,7 +6,7 @@
 export function BridgeHeader() {
   return (
     <div className="mb-4">
-      <span className="text-[18px] font-semibold text-[#E5E7EB]">
+      <span className="text-[18px] font-semibold text-[var(--text)]">
         Fastpikeswop
       </span>
     </div>

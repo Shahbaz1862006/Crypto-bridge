@@ -9,7 +9,7 @@ interface ReceiptCardProps {
   onDownloadPdf?: () => void;
 }
 
-function formatReceiptText(order: BridgeOrder, merchantTx: MerchantTx | null): string {
+function formatReceiptText(order: BridgeOrder): string {
   const lines: string[] = [
     '=== Transaction Receipt ===',
     `Order ID: ${order.orderId}`,
@@ -31,7 +31,6 @@ function formatReceiptText(order: BridgeOrder, merchantTx: MerchantTx | null): s
     `Reference Number: ${order.referenceNumber || '—'}`,
     `Status: Verified`,
     `Cooling Period: ${formatCoolingLabel(order.coolingMinutes)}`,
-    `Merchant Transaction Reference: ${merchantTx?.reference ?? '—'}`,
     '30% fee applies (for wallet withdrawal)',
   );
   return lines.join('\n');
@@ -46,7 +45,7 @@ export function ReceiptCard({
   const usdt = order.purchasedUsdt || order.usdtAmount;
   const inr = order.inrAmount || order.expectedInrAmount;
   const refMasked = order.referenceNumber ? maskReference(order.referenceNumber) : '—';
-  const receiptText = formatReceiptText(order, merchantTx);
+  const receiptText = formatReceiptText(order);
 
   const handleCopy = async () => {
     try {
@@ -62,11 +61,11 @@ export function ReceiptCard({
   };
 
   return (
-    <div className="rounded-xl bg-slate-800 border border-slate-600 overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-700">
-        <h3 className="text-lg font-semibold text-white">Receipt</h3>
+    <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden shadow-[var(--shadow)]">
+      <div className="px-4 py-2 rounded-t-xl border-b border-[var(--border)]">
+        <h3 className="text-lg font-semibold text-[var(--text)]">Receipt</h3>
       </div>
-      <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4 text-sm">
         <ReceiptRow label="Order ID" value={order.orderId} copyValue={order.orderId} />
         <ReceiptRow
           label="Date/Time"
@@ -107,18 +106,13 @@ export function ReceiptCard({
           label="Cooling Period"
           value={formatCoolingLabel(order.coolingMinutes)}
         />
-        <ReceiptRow
-          label="Merchant Transaction Reference"
-          value={merchantTx?.reference ?? '—'}
-          span={2}
-        />
         <ReceiptRow label="Fee" value="30% (for wallet withdrawal)" span={2} />
       </div>
-      <div className="px-4 py-3 border-t border-slate-700 flex flex-wrap gap-2">
+      <div className="px-4 py-2 border-t border-[var(--border)] flex flex-wrap gap-2">
         <button
           type="button"
           onClick={handleCopy}
-          className="px-4 py-2 rounded-lg bg-slate-700 text-slate-300 text-sm font-medium hover:bg-slate-600 hover:text-white transition-colors inline-flex items-center gap-2"
+          className="px-4 py-2 rounded-lg bg-gray-100 text-[var(--text)] text-sm font-medium hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
         >
           <CopyIcon />
           Copy receipt
@@ -126,7 +120,7 @@ export function ReceiptCard({
         <button
           type="button"
           onClick={handleDownloadPdf}
-          className="px-4 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm font-medium hover:bg-slate-700 hover:text-slate-300 transition-colors inline-flex items-center gap-2"
+          className="px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--muted)] text-sm font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
         >
           <DownloadIcon />
           Download PDF
@@ -148,10 +142,10 @@ function ReceiptRow({
   span?: 1 | 2;
 }) {
   return (
-    <div className={span === 2 ? 'md:col-span-2' : ''}>
-      <span className="text-slate-500 block mb-0.5">{label}</span>
+    <div className={span === 2 ? 'sm:col-span-2' : ''}>
+      <span className="text-[var(--muted)] block mb-0.5">{label}</span>
       <div className="flex items-center gap-2">
-        <span className="text-white font-medium break-all">{value}</span>
+        <span className="text-[var(--text)] font-medium break-all">{value}</span>
         {copyValue && (
           <CopyButton text={copyValue} className="shrink-0" />
         )}

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
 import { ROUTES } from '../routes/paths';
 import { LoadingOverlay } from '../components/LoadingOverlay';
-import { StepIndicator } from '../components/StepIndicator';
 import { ReceiptCard } from '../components/ReceiptCard';
 import { ConfirmModal } from '../components/ConfirmModal';
 
@@ -89,44 +88,47 @@ export function SuccessPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
-        className="max-w-[480px] mx-auto px-4 pt-0 pb-8"
+        className="w-full pt-0 pb-8"
       >
-        <StepIndicator current={3} total={3} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left column: Step indicator + Title + success message + buttons (sticky on desktop) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-6 lg:self-start">
+            <h1 className="text-2xl font-semibold text-[var(--text)] mb-2">Success</h1>
+            <p className="text-[var(--muted)] mb-2">
+              You have successfully purchased {purchasedUsdt} USDT.
+            </p>
+            <p className="text-[var(--text)] mb-4">What would you like to do next?</p>
 
-        <h1 className="text-2xl font-semibold text-white mb-2">Success</h1>
-        <p className="text-slate-400 mb-2">
-          You have successfully purchased {purchasedUsdt} USDT.
-        </p>
-        <p className="text-slate-300 mb-6">What would you like to do next?</p>
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={handleSendToMerchant}
+                disabled={buttonsDisabled}
+                className="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                Send to Merchant
+              </button>
+              <button
+                type="button"
+                onClick={handleWithdrawToWallet}
+                disabled={buttonsDisabled}
+                className="min-h-[44px] w-full rounded-xl border-2 border-[var(--green)] text-[var(--green)] font-semibold hover:bg-[var(--green)]/10 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                Withdraw to personal wallet
+              </button>
+            </div>
+          </div>
 
-        <div className="flex flex-col gap-4 mb-8">
-          <button
-            type="button"
-            onClick={handleSendToMerchant}
-            disabled={buttonsDisabled}
-            className="min-h-[44px] w-full rounded-xl bg-primary text-black font-semibold hover:bg-primary/90 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            Send to Merchant
-          </button>
-
-          <div>
-            <button
-              type="button"
-              onClick={handleWithdrawToWallet}
-              disabled={buttonsDisabled}
-              className="min-h-[44px] w-full rounded-xl border-2 border-primary text-primary font-semibold hover:bg-primary/10 disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              Withdraw to personal wallet
-            </button>
+          {/* Right column: Receipt */}
+          <div className="lg:col-span-7">
+            <ReceiptCard
+              order={order}
+              merchantTx={merchantTx}
+              onCopyReceipt={handleCopyReceipt}
+              onDownloadPdf={handleDownloadPdf}
+            />
           </div>
         </div>
-
-        <ReceiptCard
-          order={order}
-          merchantTx={merchantTx}
-          onCopyReceipt={handleCopyReceipt}
-          onDownloadPdf={handleDownloadPdf}
-        />
       </motion.div>
 
       <ConfirmModal
@@ -138,7 +140,7 @@ export function SuccessPage() {
             <p className="mb-2">
               If you withdraw to your personal wallet, 30% fees will be deducted.
             </p>
-            <p className="text-white font-medium">
+            <p className="text-[var(--text)] font-medium">
               Total you will receive: {withdrawReceiveUsdt} USDT
             </p>
           </>
@@ -154,13 +156,13 @@ export function SuccessPage() {
       )}
 
       {pdfToast && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-slate-700 text-white text-sm shadow-lg">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm shadow-[var(--shadow)]">
           PDF generated
         </div>
       )}
 
       {copyToast && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-slate-700 text-white text-sm shadow-lg">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm shadow-[var(--shadow)]">
           Receipt copied
         </div>
       )}

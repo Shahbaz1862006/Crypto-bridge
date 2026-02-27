@@ -50,6 +50,24 @@ export const beneficiaries: Beneficiary[] = [
 
 export const COOLING_OPTIONS = [5, 30, 60, 120, 1440];
 
+/** UPI beneficiary for UPI flow */
+export const UPI_BENEFICIARY = {
+  beneficiaryName: 'Rapido Gate Collections',
+  bankName: 'HDFC Bank',
+  upiId: 'rapidogate@hdfc',
+  accountNumber: '123456789012',
+  ifsc: 'HDFC0001234',
+} as const;
+
+/** Single fixed beneficiary for IMPS/RTGS/NEFT (Bank Transfer) flow */
+export const SINGLE_BANK_BENEFICIARY = {
+  id: 'BANK-FIXED',
+  displayName: 'Rapido Gate Collections',
+  bankName: 'HDFC Bank',
+  accountNumberMasked: '123456789012',
+  ifsc: 'HDFC0001234',
+} as const;
+
 function formatDateTime(d: Date): string {
   const day = String(d.getDate()).padStart(2, '0');
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -58,6 +76,66 @@ function formatDateTime(d: Date): string {
   const m = String(d.getMinutes()).padStart(2, '0');
   const s = String(d.getSeconds()).padStart(2, '0');
   return `${day}/${month}/${year}, ${h}:${m}:${s}`;
+}
+
+/** Demo transactions table: exactly 4 rows (SUCCESSFUL, FAILED, PENDING, PAYMENT_VERIFICATION) */
+export function getDemoTransactions(): MerchantTx[] {
+  const now = Date.now();
+  return [
+    {
+      id: 'demo_1',
+      dateTime: '26/02/2026, 18:31:25',
+      type: 'Deposit via Crypto Bridge',
+      description: 'Bridge deposit purchase: 60 USDT (INR converted)',
+      amountUsdt: 60,
+      balanceAfterUsdt: 13430.25,
+      reference: 'ref_dep_2rm...',
+      status: 'SUCCESSFUL',
+      coolingEndsAt: null,
+      relatedOrderId: 'ORD-001',
+      beneficiary: MOCK_BENEFICIARY,
+    },
+    {
+      id: 'demo_2',
+      dateTime: '26/02/2026, 17:45:00',
+      type: 'Deposit via Crypto Bridge',
+      description: 'Bridge deposit (verification failed)',
+      amountUsdt: 120,
+      balanceAfterUsdt: 13190.25,
+      reference: 'ref_dep_bdjl...',
+      status: 'FAILED',
+      coolingEndsAt: null,
+      relatedOrderId: 'ORD-004',
+      failureReason: 'TxID not found',
+      beneficiary: MOCK_BENEFICIARY,
+    },
+    {
+      id: 'demo_3',
+      dateTime: '26/02/2026, 16:20:00',
+      type: 'Deposit via Crypto Bridge',
+      description: 'Bridge deposit pending cooling period',
+      amountUsdt: 80,
+      balanceAfterUsdt: 13070.25,
+      reference: 'ref_dep_pend...',
+      status: 'PENDING',
+      coolingEndsAt: now + 5 * 60 * 1000,
+      relatedOrderId: 'ORD-PEND',
+      beneficiary: MOCK_BENEFICIARY,
+    },
+    {
+      id: 'demo_4',
+      dateTime: '26/02/2026, 15:12:11',
+      type: 'Deposit via Crypto Bridge',
+      description: 'Bridge deposit ready for verification',
+      amountUsdt: 60,
+      balanceAfterUsdt: 12990.25,
+      reference: 'ref_dep_verify...',
+      status: 'PAYMENT_VERIFICATION',
+      coolingEndsAt: null,
+      relatedOrderId: 'ORD-VERIFY',
+      beneficiary: MOCK_BENEFICIARY,
+    },
+  ];
 }
 
 /** Build default history with a recent PENDING tx for QA (2 min cooling) */

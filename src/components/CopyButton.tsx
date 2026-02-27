@@ -25,7 +25,7 @@ export function CopyButton({ text, onCopy, className = '', children }: CopyButto
     <button
       type="button"
       onClick={handleClick}
-      className={`inline-flex items-center gap-1.5 text-slate-400 hover:text-primary transition-colors ${className}`}
+      className={`inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--green)] transition-colors ${className}`}
       disabled={!text}
       aria-label={copied ? 'Copied' : 'Copy'}
     >
@@ -39,7 +39,7 @@ export function CopyButton({ text, onCopy, className = '', children }: CopyButto
           />
         </svg>
       )}
-      {copied && <span className="text-xs text-primary">Copied</span>}
+      {copied && <span className="text-xs text-[var(--green)]">Copied</span>}
     </button>
   );
 }

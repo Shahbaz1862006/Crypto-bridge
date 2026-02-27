@@ -31,7 +31,7 @@ export function LargeModal({ isOpen, onClose, title, children }: LargeModalProps
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -42,16 +42,16 @@ export function LargeModal({ isOpen, onClose, title, children }: LargeModalProps
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[min(1100px,95vw)] max-h-[min(90vh,900px)] flex flex-col rounded-xl bg-slate-800 border border-slate-600 shadow-2xl overflow-hidden"
+        className="w-full max-w-[min(1100px,95vw)] max-h-[min(90vh,900px)] flex flex-col rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow)] overflow-hidden"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700 shrink-0">
-          <h2 id="large-modal-title" className="text-xl font-semibold text-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)] shrink-0">
+          <h2 id="large-modal-title" className="text-xl font-semibold text-[var(--text)]">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+            className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-gray-100 transition-colors"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

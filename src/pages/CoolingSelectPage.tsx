@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
 import { COOLING_OPTIONS } from '../api/mockData';
-import { StepIndicator } from '../components/StepIndicator';
 import { ROUTES } from '../routes/paths';
 
 export function CoolingSelectPage() {
@@ -36,19 +35,10 @@ export function CoolingSelectPage() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="max-w-[480px] mx-auto px-4 pt-0 pb-8"
+      className="w-full pt-0 pb-8"
     >
-      <button
-        type="button"
-        onClick={() => navigate(ROUTES.BRIDGE.BENEFICIARY)}
-        className="mb-4 text-slate-400 hover:text-primary text-sm"
-      >
-        ← Back
-      </button>
-      <StepIndicator current={2} total={3} />
-
-      <h1 className="text-2xl font-semibold text-white mb-2">Select Cooling Period</h1>
-      <p className="text-slate-400 mb-6">
+      <h1 className="text-2xl font-semibold text-[var(--text)] mb-2">Select Cooling Period</h1>
+      <p className="text-[var(--muted)] mb-6">
         Some banks may require a cooling period for first-time beneficiary transfers.
       </p>
 
@@ -56,17 +46,17 @@ export function CoolingSelectPage() {
         <button
           type="button"
           onClick={handleSelectNone}
-          className="w-full min-h-[44px] px-4 rounded-xl bg-slate-800 border border-slate-600 hover:border-primary text-left text-white flex items-center justify-between"
+          className="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] flex items-center justify-between shadow-[var(--shadow)]"
         >
           <span>None</span>
-          <span className="text-primary text-sm">Skip cooling</span>
+          <span className="text-[var(--green)] text-sm">Skip cooling</span>
         </button>
         {COOLING_OPTIONS.map((mins) => (
           <button
             key={mins}
             type="button"
             onClick={() => handleSelectCooling(mins)}
-            className="w-full min-h-[44px] px-4 rounded-xl bg-slate-800 border border-slate-600 hover:border-primary text-left text-white"
+            className="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] shadow-[var(--shadow)]"
           >
             {formatCoolingLabel(mins)}
           </button>

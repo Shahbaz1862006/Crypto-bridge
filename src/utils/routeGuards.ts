@@ -6,6 +6,7 @@ const PAYMENT_ALLOWED: InvoiceStatus[] = [
   'AWAITING_BENEFICIARY',
   'COOLING',
   'READY_FOR_VERIFICATION',
+  'VERIFYING', // Allow staying on payment during confirm → success (prevents Step 1 flash)
   'FAILED',
 ];
 

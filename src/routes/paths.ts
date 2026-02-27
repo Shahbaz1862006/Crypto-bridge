@@ -17,6 +17,7 @@ export const ROUTES = {
   },
   MERCHANT: {
     BASE: '/merchant',
+    HOME: '/merchant',
     HISTORY: '/merchant/history',
   },
 } as const;

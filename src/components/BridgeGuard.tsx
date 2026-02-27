@@ -69,7 +69,7 @@ export function BridgeGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    if (path === ROUTES.MERCHANT.HISTORY) return;
+    if (path === ROUTES.MERCHANT.HOME || path === ROUTES.MERCHANT.HISTORY) return;
 
     if (path === ROUTES.BRIDGE.VERIFY) {
       if (!canAccessVerify(invoiceStatus)) {

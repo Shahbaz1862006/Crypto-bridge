@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 36" fill="none">
+  <!-- UPI letters - dark gray #333 -->
+  <text x="0" y="26" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333333">UPI</text>
+  <!-- Arrow: orange triangle (top-right) -->
+  <path d="M58 4 L58 32 L92 18 Z" fill="#FF6B35"/>
+  <!-- Arrow: green triangle (bottom-right, overlapping) -->
+  <path d="M58 18 L92 18 L75 32 Z" fill="#008751"/>
+</svg>

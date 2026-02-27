@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
-import { StepIndicator } from '../components/StepIndicator';
 import { ROUTES } from '../routes/paths';
 
 export function CoolingPage() {
@@ -34,7 +33,7 @@ export function CoolingPage() {
 
   useEffect(() => {
     if (!effectiveCoolingEndsAt && !txIdParam) {
-      navigate(ROUTES.BRIDGE.COOLING_SELECT, { replace: true });
+      navigate(ROUTES.BRIDGE.BENEFICIARY, { replace: true });
     }
   }, [effectiveCoolingEndsAt, txIdParam, navigate]);
 
@@ -69,79 +68,83 @@ export function CoolingPage() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="max-w-[480px] mx-auto px-4 pt-0 pb-8"
+      className="w-full pt-0 pb-8"
     >
-      <StepIndicator current={2} total={3} />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+        {isResumeMode && (
+          <p className="mb-4 px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm">
+            Cooling in progress — resumed from Transaction History
+          </p>
+        )}
 
-      {isResumeMode && (
-        <p className="mb-4 px-4 py-2 rounded-lg bg-slate-800/80 border border-slate-600 text-slate-300 text-sm">
-          Cooling in progress — resumed from Transaction History
-        </p>
-      )}
+        <h1 className="mt-2 mb-6 text-2xl font-semibold text-gray-900">
+          Cooling Period
+        </h1>
 
-      <h1 className="text-2xl font-semibold text-white mb-4">Cooling Period</h1>
-
-      {effectiveCoolingEndsAt != null ? (
-        <>
-          <div className="p-4 rounded-xl bg-slate-800 border border-slate-600 mb-6">
-            <p className="text-slate-300 text-sm">
-              You can go back to merchant. This transaction will stay Pending
-              until cooling ends.
-            </p>
-          </div>
-
-          {!coolingPassed ? (
-            <div className="space-y-4">
-              <div className="text-center py-6">
-                <p className="text-4xl font-mono text-primary">
-                  {formatTime(timeRemaining)}
-                </p>
-                <p className="text-slate-400 mt-2">Time remaining</p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    touch();
-                    navigate(ROUTES.MERCHANT.HISTORY);
-                  }}
-                  className="min-h-[44px] w-full rounded-xl bg-primary text-black font-semibold hover:bg-primary/90"
-                >
-                  Go to Merchant
-                </button>
-                <p className="text-slate-500 text-sm text-center">
-                  Or stay here and wait for the countdown
-                </p>
-              </div>
+        {effectiveCoolingEndsAt != null ? (
+          <>
+            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-6 shadow-[var(--shadow)]">
+              <p className="text-[var(--text)] text-sm">
+                You can go back to merchant. This transaction will stay Pending
+                until cooling ends.
+              </p>
             </div>
-          ) : (
-            <div className="space-y-4">
-              {coolingEndedToast && (
-                <div className="p-4 rounded-xl bg-primary/20 border border-primary/50 text-primary">
-                  Cooling ended. Please verify payment.
+
+            {!coolingPassed ? (
+              <div className="space-y-6">
+                <div className="text-center py-6">
+                  <p className="text-4xl font-mono font-bold text-[var(--green)]">
+                    {formatTime(timeRemaining)}
+                  </p>
+                  <p className="text-[var(--muted)] mt-2">Time remaining</p>
                 </div>
-              )}
-              <button
-                type="button"
-                onClick={handleProceedToVerify}
-                className="min-h-[44px] w-full rounded-xl bg-primary text-black font-semibold hover:bg-primary/90"
-              >
-                Verify Payment
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  touch();
-                  navigate(ROUTES.MERCHANT.HISTORY);
-                }}
-                className="min-h-[44px] w-full rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800"
-              >
-                Go to Merchant
-              </button>
-            </div>
-          )}
-        </>
-      ) : null}
+                <div className="flex flex-col items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      touch();
+                      navigate(ROUTES.MERCHANT.HISTORY);
+                    }}
+                    className="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)]"
+                  >
+                    Go to Merchant
+                  </button>
+                  <p className="text-[var(--muted)] text-sm text-center">
+                    Or stay here and wait for the countdown
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {coolingEndedToast && (
+                  <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--green)] text-[var(--green)] shadow-[var(--shadow)]">
+                    Cooling ended. Please verify payment.
+                  </div>
+                )}
+                <div className="flex flex-col items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleProceedToVerify}
+                    className="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)]"
+                  >
+                    Verify Payment
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      touch();
+                      navigate(ROUTES.MERCHANT.HISTORY);
+                    }}
+                    className="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl border border-[var(--border)] text-[var(--text)] hover:bg-gray-100"
+                  >
+                    Go to Merchant
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : null}
+      </div>
     </motion.div>
   );
 }
