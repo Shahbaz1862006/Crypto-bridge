@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
 import { ROUTES } from '../routes/paths';
+import pikeswopIcon from '../assets/pikeswop-icon.png';
 
 export function MerchantHomePage() {
   const navigate = useNavigate();
@@ -17,9 +18,14 @@ export function MerchantHomePage() {
       <button
         type="button"
         onClick={handleDeposit}
-        className="min-h-[52px] px-12 rounded-xl bg-[var(--green)] text-white font-semibold text-lg hover:bg-[var(--green-hover)] transition-colors shadow-[var(--shadow)]"
+        className="min-h-[52px] px-12 rounded-xl bg-white text-[var(--green)] font-semibold text-lg border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3"
       >
-        Deposit via Fastpikeswop
+        <img
+          src={pikeswopIcon}
+          alt="Fastpikeswop"
+          className="h-8 w-auto object-contain shrink-0"
+        />
+        <span>Deposit via Fastpikeswop</span>
       </button>
     </div>
   );

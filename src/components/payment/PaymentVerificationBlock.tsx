@@ -39,7 +39,9 @@ export function PaymentVerificationBlock({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full min-h-[44px] px-4 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] placeholder-[var(--muted)] focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--focus)] focus:outline-none font-mono uppercase"
+          className={`w-full min-h-[44px] px-4 rounded-xl bg-white border text-[var(--text)] placeholder-[var(--muted)] focus:ring-2 focus:outline-none font-mono uppercase ${
+            error ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-[var(--border)] focus:border-[var(--green)] focus:ring-[var(--focus)]'
+          }`}
         />
         {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
       </div>

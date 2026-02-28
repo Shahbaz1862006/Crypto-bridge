@@ -1,16 +1,20 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
 import { SuccessModal } from '../components/SuccessModal';
+import { FailedModal } from '../components/FailedModal';
+import { ROUTES } from '../routes/paths';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import type { ReferenceType } from '../store/types';
 
 export function VerifyPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const txIdParam = searchParams.get('txId');
   const [localError, setLocalError] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailedModal, setShowFailedModal] = useState(false);
 
   const order = useBridgeStore((s) => s.order);
   const merchantHistory = useBridgeStore((s) => s.merchantHistory);
@@ -99,7 +103,8 @@ export function VerifyPage() {
     if (result.success) {
       setShowSuccessModal(true);
     } else {
-      setLocalError(result.error ?? 'Verification failed');
+      setLocalError('Invalid reference number');
+      setShowFailedModal(true);
     }
   };
 
@@ -112,6 +117,21 @@ export function VerifyPage() {
         verificationErrorCode: null,
       },
     }));
+  };
+
+  const handleFailedTryAgain = () => {
+    setLocalError(null);
+    useBridgeStore.setState((s) => ({
+      order: {
+        ...s.order,
+        verificationErrorMessage: null,
+        verificationErrorCode: null,
+      },
+    }));
+  };
+
+  const handleFailedChangeMethod = () => {
+    navigate(ROUTES.BRIDGE.PAYMENT, { replace: true });
   };
 
   const label = refType === 'BRN' ? 'BRN (Bank Reference Number)' : 'UTR (UPI Transaction Reference)';
@@ -208,6 +228,14 @@ export function VerifyPage() {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
+      />
+
+      <FailedModal
+        isOpen={showFailedModal}
+        onClose={() => setShowFailedModal(false)}
+        onTryAgain={handleFailedTryAgain}
+        onChangeMethod={handleFailedChangeMethod}
+        showChangeMethod
       />
 
       {isVerifying && (

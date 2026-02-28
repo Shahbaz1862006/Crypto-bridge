@@ -6,6 +6,7 @@ import { SINGLE_BANK_BENEFICIARY } from '../api/mockData';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { PaymentAmountCard, PaymentBeneficiaryCard, PaymentVerificationBlock } from '../components/payment';
 import { SuccessModal } from '../components/SuccessModal';
+import { FailedModal } from '../components/FailedModal';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import { ROUTES } from '../routes/paths';
 
@@ -26,6 +27,7 @@ export function BeneficiaryPage() {
   const [touchedBrn, setTouchedBrn] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailedModal, setShowFailedModal] = useState(false);
 
   const order = useBridgeStore((s) => s.order);
   const { usdtAmount, inrAmount, paymentMethod } = order;
@@ -84,7 +86,8 @@ export function BeneficiaryPage() {
       if (result.success) {
         setShowSuccessModal(true);
       } else {
-        setBrnError('Incorrect BRN');
+        setBrnError('Invalid reference number');
+        setShowFailedModal(true);
       }
     } finally {
       setIsVerifying(false);
@@ -102,6 +105,10 @@ export function BeneficiaryPage() {
       order: { ...s.order, paymentMethod: null },
     }));
     navigate(ROUTES.BRIDGE.PAYMENT, { replace: true });
+  };
+
+  const handleFailedTryAgain = () => {
+    setBrnError(null);
   };
 
   const canContinueCooling = Boolean(selectedCooling) && selectedCooling !== 'none';
@@ -206,6 +213,14 @@ export function BeneficiaryPage() {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
+      />
+
+      <FailedModal
+        isOpen={showFailedModal}
+        onClose={() => setShowFailedModal(false)}
+        onTryAgain={handleFailedTryAgain}
+        onChangeMethod={handleChangeMethod}
+        showChangeMethod
       />
     </motion.div>
   );

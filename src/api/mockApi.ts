@@ -78,10 +78,10 @@ export const ALWAYS_SUCCESS_UTR = 'UTR1234567890';
 export const ALWAYS_SUCCESS_BRN = 'BRN1234567890';
 
 /**
- * Mock verification engine (deterministic).
- * NF => NOT_FOUND, AMT => AMOUNT_MISMATCH, USED => ALREADY_USED, FRAUD => FRAUD
- * If referenceNumber already in usedReferences => ALREADY_USED
- * ALWAYS_SUCCESS_UTR / ALWAYS_SUCCESS_BRN always succeed (for testing)
+ * Mock verification engine.
+ * Only ALWAYS_SUCCESS_UTR (UTR) and ALWAYS_SUCCESS_BRN (BRN) succeed.
+ * All other references show failed verification popup.
+ * Valid numbers always succeed (ignore usedReferences and dev overrides for demo).
  */
 export async function verifyReference(
   params: {
@@ -95,73 +95,27 @@ export async function verifyReference(
 
   const ref = params.referenceNumber.trim().toUpperCase();
 
-  if (
+  const isValid =
     (params.referenceType === 'UTR' && ref === ALWAYS_SUCCESS_UTR) ||
-    (params.referenceType === 'BRN' && ref === ALWAYS_SUCCESS_BRN)
-  ) {
+    (params.referenceType === 'BRN' && ref === ALWAYS_SUCCESS_BRN);
+
+  if (isValid) {
     return { success: true };
   }
 
-  if (usedReferences.includes(ref)) {
+  if (devForceVerifyFail === 'FAIL' || devForceVerifyFail === 'USED' || devForceVerifyFail === 'AMOUNT') {
     return {
       success: false,
-      errorCode: 'ALREADY_USED',
+      errorCode: devForceVerifyFail === 'USED' ? 'ALREADY_USED' : devForceVerifyFail === 'AMOUNT' ? 'AMOUNT_MISMATCH' : 'NOT_FOUND',
       error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
     };
   }
 
-  if (devForceVerifyFail === 'FAIL') {
-    return {
-      success: false,
-      errorCode: 'NOT_FOUND',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-  if (devForceVerifyFail === 'USED') {
-    return {
-      success: false,
-      errorCode: 'ALREADY_USED',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-  if (devForceVerifyFail === 'AMOUNT') {
-    return {
-      success: false,
-      errorCode: 'AMOUNT_MISMATCH',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-
-  if (ref.includes('NF')) {
-    return {
-      success: false,
-      errorCode: 'NOT_FOUND',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-  if (ref.includes('AMT')) {
-    return {
-      success: false,
-      errorCode: 'AMOUNT_MISMATCH',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-  if (ref.includes('USED')) {
-    return {
-      success: false,
-      errorCode: 'ALREADY_USED',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-  if (ref.includes('FRAUD')) {
-    return {
-      success: false,
-      errorCode: 'FRAUD',
-      error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
-    };
-  }
-
-  return { success: true };
+  return {
+    success: false,
+    errorCode: usedReferences.includes(ref) ? 'ALREADY_USED' : 'NOT_FOUND',
+    error: params.referenceType === 'BRN' ? 'Incorrect BRN' : 'Incorrect UTR',
+  };
 }
 
 export async function finalizeSettlement(_orderId?: string): Promise<void> {

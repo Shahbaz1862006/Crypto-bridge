@@ -9,6 +9,7 @@ import { useOrder } from '../hooks/useOrder';
 import { CopyButton } from '../components/CopyButton';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { SuccessModal } from '../components/SuccessModal';
+import { FailedModal } from '../components/FailedModal';
 import { UPI_BENEFICIARY, DEFAULT_EXCHANGE_RATE } from '../api/mockData';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import { ROUTES } from '../routes/paths';
@@ -22,6 +23,7 @@ export function PaymentPage() {
   const [utrError, setUtrError] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailedModal, setShowFailedModal] = useState(false);
 
   const { paymentMethod, touch, selectUPI, selectBANK } = useOrder();
 
@@ -87,11 +89,20 @@ export function PaymentPage() {
       if (result.success) {
         setShowSuccessModal(true);
       } else {
-        setUtrError('Incorrect UTR');
+        setUtrError('Invalid reference number');
+        setShowFailedModal(true);
       }
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const handleFailedTryAgain = () => {
+    setUtrError(null);
+  };
+
+  const handleFailedChangeMethod = () => {
+    handleChangeMethod();
   };
 
   const upiUri = `upi://pay?pa=rapidogate@hdfc&pn=Rapido%20Gate%20Collections&am=${FIXED_INR.toFixed(2)}&cu=INR`;
@@ -200,10 +211,12 @@ export function PaymentPage() {
                     value={utrInput}
                     onChange={handleUtrChange}
                     placeholder="e.g., 1234567890ABC"
-                    className="w-full min-h-[44px] px-4 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] placeholder-[var(--muted)] focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--focus)] focus:outline-none font-mono uppercase"
+                    className={`w-full min-h-[44px] px-4 rounded-xl bg-white border text-[var(--text)] placeholder-[var(--muted)] focus:ring-2 focus:outline-none font-mono uppercase ${
+                      utrError ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-[var(--border)] focus:border-[var(--green)] focus:ring-[var(--focus)]'
+                    }`}
                   />
                   {(utrValidation.error || utrError) && (
-                    <p className="mt-1 text-sm text-red-500">{utrError ?? utrValidation.error}</p>
+                    <p className="mt-1 text-sm text-red-500">{utrError ?? utrValidation.error ?? 'Invalid reference number'}</p>
                   )}
                 </div>
                 <button
@@ -237,6 +250,14 @@ export function PaymentPage() {
         <SuccessModal
           isOpen={showSuccessModal}
           onClose={() => setShowSuccessModal(false)}
+        />
+
+        <FailedModal
+          isOpen={showFailedModal}
+          onClose={() => setShowFailedModal(false)}
+          onTryAgain={handleFailedTryAgain}
+          onChangeMethod={handleFailedChangeMethod}
+          showChangeMethod
         />
       </div>
     </motion.div>
