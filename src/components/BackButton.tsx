@@ -4,17 +4,23 @@ interface BackButtonProps {
   fallbackTo: string;
   preserveQuery?: boolean;
   className?: string;
+  /** When set, always hard redirect to this URL (ignores history) */
+  forceRedirectTo?: string;
 }
 
 /**
  * Back button for Bridge flow screens.
- * Uses navigate(-1) when there's browser history, else navigates to fallback route.
+ * Uses forceRedirectTo when set, else navigate(-1) when there's browser history, else navigates to fallback route.
  */
-export function BackButton({ fallbackTo, preserveQuery = false, className }: BackButtonProps) {
+export function BackButton({ fallbackTo, preserveQuery = false, className, forceRedirectTo }: BackButtonProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleClick = () => {
+    if (forceRedirectTo) {
+      window.location.href = forceRedirectTo;
+      return;
+    }
     if (window.history.length > 1) {
       navigate(-1);
     } else {

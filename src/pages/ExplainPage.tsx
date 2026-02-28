@@ -40,7 +40,7 @@ export function ExplainPage() {
           Buy Crypto
         </h1>
         <p className="mb-8 text-[var(--muted)] leading-relaxed">
-          Your deposit will be processed via crypto bridge. We will use your INR payment to purchase USDT. Then you can send it to the merchant or withdraw to a personal wallet.
+          Your deposit will be processed via Fastpikeswop. Fastpikeswop will convert your payment into USDT. Then you can send it to the merchant or withdraw to a personal wallet.
         </p>
 
         <div className="flex flex-col items-center gap-3">

@@ -31,7 +31,11 @@ export function BridgeLayout() {
       <header className="px-4 lg:px-10 pt-6 pb-4">
         <div className="text-lg font-semibold text-[var(--text)]">Fastpikeswop</div>
         <div className="mt-6">
-          <BackButton fallbackTo={fallbackTo} className="mb-0 text-sm text-[var(--muted)] hover:text-[var(--green)] hover:underline inline-flex items-center gap-1 transition-colors" />
+          <BackButton
+            fallbackTo={fallbackTo}
+            forceRedirectTo={location.pathname === ROUTES.BRIDGE.EXPLAIN ? 'http://localhost:5173/merchant/history' : undefined}
+            className="mb-0 text-sm text-[var(--muted)] hover:text-[var(--green)] hover:underline inline-flex items-center gap-1 transition-colors"
+          />
         </div>
         <div className="mt-4">
           <StepIndicator current={step} total={2} />

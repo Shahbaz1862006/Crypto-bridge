@@ -113,7 +113,7 @@ export function MerchantHistoryPage() {
           onClick={handleDeposit}
           className="px-4 py-2 rounded-lg bg-[var(--green)] text-white text-sm font-medium hover:bg-[var(--green-hover)]"
         >
-          Deposit
+          Deposit via fastpikeswop
         </button>
       </header>
 
