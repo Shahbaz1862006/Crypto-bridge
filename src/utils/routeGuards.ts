@@ -7,6 +7,7 @@ const PAYMENT_ALLOWED: InvoiceStatus[] = [
   'COOLING',
   'READY_FOR_VERIFICATION',
   'VERIFYING', // Allow staying on payment during confirm → success (prevents Step 1 flash)
+  'VERIFIED', // Allow staying on payment when success modal is shown
   'FAILED',
 ];
 
@@ -33,17 +34,6 @@ export function canAccessCooling(
 
 
 export function canAccessVerify(invoiceStatus: InvoiceStatus): boolean {
-  return ['READY_FOR_VERIFICATION', 'VERIFYING', 'FAILED'].includes(invoiceStatus);
+  return ['READY_FOR_VERIFICATION', 'VERIFYING', 'VERIFIED', 'FAILED'].includes(invoiceStatus);
 }
 
-export function canAccessSuccess(
-  invoiceStatus: InvoiceStatus,
-  referenceVerified: boolean,
-  orderId: string
-): boolean {
-  return (
-    invoiceStatus === 'VERIFIED' &&
-    referenceVerified === true &&
-    Boolean(orderId?.trim())
-  );
-}

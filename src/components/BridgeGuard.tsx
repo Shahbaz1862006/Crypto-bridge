@@ -7,7 +7,6 @@ import {
   canAccessCooling,
   canAccessCoolingSelect,
   canAccessVerify,
-  canAccessSuccess,
 } from '../utils/routeGuards';
 import { ROUTES } from '../routes/paths';
 
@@ -18,7 +17,7 @@ export function BridgeGuard({ children }: { children: React.ReactNode }) {
   const touch = useBridgeStore((s) => s.touch);
 
   const order = useBridgeStore((s) => s.order);
-  const { invoiceStatus, paymentMethod, selectedBeneficiary, referenceVerified, orderId } = order;
+  const { invoiceStatus, paymentMethod, selectedBeneficiary } = order;
 
   useEffect(() => {
     touch();
@@ -42,8 +41,7 @@ export function BridgeGuard({ children }: { children: React.ReactNode }) {
 
     if (path === ROUTES.BRIDGE.PAYMENT) {
       if (!canAccessPayment(invoiceStatus)) {
-        if (invoiceStatus === 'VERIFIED') navigate(ROUTES.BRIDGE.SUCCESS, { replace: true });
-        else navigate(ROUTES.BRIDGE.EXPLAIN, { replace: true });
+        navigate(ROUTES.BRIDGE.EXPLAIN, { replace: true });
       }
       return;
     }
@@ -73,33 +71,21 @@ export function BridgeGuard({ children }: { children: React.ReactNode }) {
 
     if (path === ROUTES.BRIDGE.VERIFY) {
       if (!canAccessVerify(invoiceStatus)) {
-        if (invoiceStatus === 'VERIFIED') navigate(ROUTES.BRIDGE.SUCCESS, { replace: true });
-        else if (invoiceStatus === 'COOLING') navigate(ROUTES.BRIDGE.COOLING, { replace: true });
+        if (invoiceStatus === 'COOLING') navigate(ROUTES.BRIDGE.COOLING, { replace: true });
         else navigate(ROUTES.BRIDGE.PAYMENT, { replace: true });
       }
       return;
     }
 
+    // Success route removed – redirect to merchant history
     if (path === ROUTES.BRIDGE.SUCCESS) {
-      if (!canAccessSuccess(invoiceStatus, referenceVerified, orderId)) {
-        if (invoiceStatus === 'READY_FOR_VERIFICATION' || invoiceStatus === 'FAILED') {
-          navigate(ROUTES.BRIDGE.VERIFY, { replace: true });
-        } else if (invoiceStatus === 'COOLING') {
-          navigate(ROUTES.BRIDGE.COOLING, { replace: true });
-        } else if (!orderId) {
-          navigate(ROUTES.BRIDGE.EXPLAIN, { replace: true });
-        } else {
-          navigate(ROUTES.BRIDGE.PAYMENT, { replace: true });
-        }
-      }
+      navigate(ROUTES.MERCHANT.HISTORY, { replace: true });
     }
   }, [
     location.pathname,
     invoiceStatus,
     paymentMethod,
     selectedBeneficiary,
-    referenceVerified,
-    orderId,
     checkExpiry,
     navigate,
   ]);

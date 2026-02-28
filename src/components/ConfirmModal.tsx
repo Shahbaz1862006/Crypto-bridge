@@ -11,6 +11,8 @@ interface ConfirmModalProps {
   onConfirm: () => void;
   onCancel?: () => void;
   loading?: boolean;
+  /** When true, disables the confirm button */
+  confirmDisabled?: boolean;
 }
 
 export function ConfirmModal({
@@ -23,6 +25,7 @@ export function ConfirmModal({
   onConfirm,
   onCancel,
   loading = false,
+  confirmDisabled = false,
 }: ConfirmModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -62,7 +65,7 @@ export function ConfirmModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-[var(--shadow)]"
+        className="w-full max-w-md lg:max-w-lg rounded-xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-[var(--shadow)]"
       >
         <h2 id="confirm-modal-title" className="text-xl font-semibold text-[var(--text)] mb-4">
           {title}
@@ -72,7 +75,7 @@ export function ConfirmModal({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={loading}
+            disabled={loading || confirmDisabled}
             className="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing…' : confirmLabel}

@@ -1,5 +1,5 @@
 import { CopyButton } from './CopyButton';
-import { maskReference, formatCoolingLabel, formatReceiptDate } from '../utils/receipt';
+import { maskReference, formatCoolingLabel, formatReceiptDate, formatReceiptText } from '../utils/receipt';
 import type { BridgeOrder } from '../store/types';
 
 interface ReceiptCardProps {
@@ -7,33 +7,6 @@ interface ReceiptCardProps {
   merchantTx?: unknown;
   onCopyReceipt?: (text: string) => void;
   onDownloadPdf?: () => void;
-}
-
-function formatReceiptText(order: BridgeOrder): string {
-  const lines: string[] = [
-    '=== Transaction Receipt ===',
-    `Order ID: ${order.orderId}`,
-    `Date/Time: ${formatReceiptDate(order.createdAt)}`,
-    `Payment Method: ${order.paymentMethod === 'UPI' ? 'UPI' : 'IMPS/RTGS/NEFT'}`,
-  ];
-  if (order.paymentMethod === 'BANK' && order.selectedBeneficiary) {
-    const b = order.selectedBeneficiary;
-    lines.push(`Beneficiary: ${b.displayName}`);
-    lines.push(`Bank: ${b.bankName}`);
-    lines.push(`Account: ${b.accountNumberMasked}`);
-    lines.push(`IFSC: ${b.ifsc}`);
-  }
-  lines.push(
-    `USDT Purchased: ${order.purchasedUsdt || order.usdtAmount} USDT`,
-    `Exchange Rate: 1 USDT = ₹${order.exchangeRate}`,
-    `INR Paid: ₹${(order.inrAmount || order.expectedInrAmount).toLocaleString('en-IN')}`,
-    `Reference Type: ${order.referenceType ?? '—'}`,
-    `Reference Number: ${order.referenceNumber || '—'}`,
-    `Status: Verified`,
-    `Cooling Period: ${formatCoolingLabel(order.coolingMinutes)}`,
-    '30% fee applies (for wallet withdrawal)',
-  );
-  return lines.join('\n');
 }
 
 export function ReceiptCard({

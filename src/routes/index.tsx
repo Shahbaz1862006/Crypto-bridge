@@ -13,7 +13,6 @@ import { CoolingSelectPage } from '../pages/CoolingSelectPage';
 import { MerchantHomePage } from '../pages/MerchantHomePage';
 import { MerchantHistoryPage } from '../pages/MerchantHistoryPage';
 import { VerifyPage } from '../pages/VerifyPage';
-import { SuccessPage } from '../pages/SuccessPage';
 import { ExpiredPage } from '../pages/ExpiredPage';
 import { ROUTES } from './paths';
 
@@ -42,7 +41,6 @@ export function AppRoutes() {
               <Route path={ROUTES.BRIDGE.COOLING_SELECT} element={<CoolingSelectPage />} />
               <Route path={ROUTES.BRIDGE.COOLING} element={<CoolingPage />} />
               <Route path={ROUTES.BRIDGE.VERIFY} element={<VerifyPage />} />
-              <Route path={ROUTES.BRIDGE.SUCCESS} element={<SuccessPage />} />
               <Route path={ROUTES.BRIDGE.EXPIRED} element={<ExpiredPage />} />
             </Route>
             <Route path="*" element={<Navigate to={ROUTES.MERCHANT.HOME} replace />} />

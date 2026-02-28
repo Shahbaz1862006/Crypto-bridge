@@ -8,6 +8,7 @@ import { useBridgeStore } from '../store/bridgeStore';
 import { useOrder } from '../hooks/useOrder';
 import { CopyButton } from '../components/CopyButton';
 import { LoadingOverlay } from '../components/LoadingOverlay';
+import { SuccessModal } from '../components/SuccessModal';
 import { UPI_BENEFICIARY, DEFAULT_EXCHANGE_RATE } from '../api/mockData';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import { ROUTES } from '../routes/paths';
@@ -20,6 +21,7 @@ export function PaymentPage() {
   const [utrInput, setUtrInput] = useState('');
   const [utrError, setUtrError] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const { paymentMethod, touch, selectUPI, selectBANK } = useOrder();
 
@@ -83,7 +85,7 @@ export function PaymentPage() {
     try {
       const result = await verifyReference();
       if (result.success) {
-        navigate(ROUTES.BRIDGE.SUCCESS, { replace: true });
+        setShowSuccessModal(true);
       } else {
         setUtrError('Incorrect UTR');
       }
@@ -144,15 +146,14 @@ export function PaymentPage() {
           <>
             <h1 className="text-2xl font-semibold text-[var(--text)] mb-4">Deposit & Payment</h1>
             <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6 lg:gap-8 items-start w-full">
-            {/* Left column: Amount + Beneficiary + UTR + Confirm + Change method */}
-            <div className="w-full space-y-4 min-w-0">
-              {/* Amount row */}
-              <div className="w-full flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-4 shadow-[var(--shadow)]">
+              {/* 1. Amount summary - order-1 on mobile, left col on desktop */}
+              <div className="order-1 w-full flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-4 shadow-[var(--shadow)] lg:col-span-1 lg:col-start-1 lg:row-start-1">
                 <span className="text-2xl font-semibold text-[var(--text)]">{FIXED_USDT} USDT</span>
                 <span className="text-2xl font-semibold text-[var(--text)]">≈ ₹{FIXED_INR.toLocaleString('en-IN')} INR</span>
               </div>
-              {/* Beneficiary card */}
-              <div className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow)]">
+
+              {/* 2. Beneficiary card - order-2 on mobile, left col on desktop */}
+              <div className="order-2 w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow)] lg:col-span-1 lg:col-start-1 lg:row-start-2">
                 <h3 className="text-[var(--text)] font-medium mb-2">Beneficiary Details</h3>
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -170,64 +171,73 @@ export function PaymentPage() {
                   </div>
                 </div>
               </div>
-              {/* UTR input */}
-              <div className="w-full">
-                <label htmlFor="utr-input" className="block text-[var(--text)] mb-2">Enter UTR / TxID</label>
-                <input
-                  id="utr-input"
-                  type="text"
-                  value={utrInput}
-                  onChange={handleUtrChange}
-                  placeholder="e.g., 1234567890ABC"
-                  className="w-full min-h-[44px] px-4 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] placeholder-[var(--muted)] focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--focus)] focus:outline-none font-mono uppercase"
-                />
-                {(utrValidation.error || utrError) && (
-                  <p className="mt-1 text-sm text-red-500">{utrError ?? utrValidation.error}</p>
-                )}
-              </div>
-              {/* Confirm Payment button */}
-              <button
-                type="button"
-                onClick={handleConfirmPayment}
-                disabled={!canConfirmUtr || isVerifying}
-                className="w-full rounded-xl py-4 text-lg font-semibold bg-[var(--green)] text-white hover:bg-[var(--green-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Confirm Payment
-              </button>
-              {/* Change method */}
-              <button
-                type="button"
-                onClick={handleChangeMethod}
-                className="block w-full text-center text-[var(--green)] text-sm hover:underline mt-2"
-              >
-                Change method
-              </button>
-            </div>
 
-            {/* Right column: Scan to pay (sticky on desktop) */}
-            <div className="lg:sticky lg:top-6 lg:self-start w-full">
-              <div className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 flex flex-col shadow-[var(--shadow)]">
-                <p className="text-[var(--text)] font-medium mb-1">Scan to pay</p>
-                <p className="text-[var(--muted)] text-sm mb-4">Amount: ₹{FIXED_INR.toLocaleString('en-IN')}</p>
-                <div className="w-full rounded-lg border border-[var(--border)] bg-white p-4 flex items-center justify-center">
-                  <div className="w-[320px] h-[320px] flex items-center justify-center mx-auto shrink-0">
-                    <QRCodeSVG value={upiUri} size={320} level="M" />
+              {/* 3. QR card - order-3 on mobile (above verification), right col on desktop */}
+              <div className="order-3 lg:order-3 lg:col-span-1 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:sticky lg:top-6 lg:self-start w-full">
+                <div className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 flex flex-col shadow-[var(--shadow)]">
+                  <p className="text-[var(--text)] font-medium mb-1">Scan to pay</p>
+                  <p className="text-[var(--muted)] text-sm mb-4">Amount: ₹{FIXED_INR.toLocaleString('en-IN')}</p>
+                  <div className="w-full rounded-lg border border-[var(--border)] bg-white p-4 flex items-center justify-center">
+                    <div className="w-[320px] h-[320px] flex items-center justify-center mx-auto shrink-0">
+                      <QRCodeSVG value={upiUri} size={320} level="M" />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
+                    <span className="text-[var(--muted)] text-sm">UPI ID: </span>
+                    <span className="text-[var(--green)] font-mono text-sm">{UPI_BENEFICIARY.upiId}</span>
+                    <CopyButton text={UPI_BENEFICIARY.upiId} />
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
-                  <span className="text-[var(--muted)] text-sm">UPI ID: </span>
-                  <span className="text-[var(--green)] font-mono text-sm">{UPI_BENEFICIARY.upiId}</span>
-                  <CopyButton text={UPI_BENEFICIARY.upiId} />
+              </div>
+
+              {/* 4. UTR + Confirm - order-4 on mobile, left col on desktop */}
+              <div className="order-4 w-full space-y-4 min-w-0 lg:col-span-1 lg:col-start-1 lg:row-start-3">
+                <div className="w-full">
+                  <label htmlFor="utr-input" className="block text-[var(--text)] mb-2">Enter UTR / TxID</label>
+                  <input
+                    id="utr-input"
+                    type="text"
+                    value={utrInput}
+                    onChange={handleUtrChange}
+                    placeholder="e.g., 1234567890ABC"
+                    className="w-full min-h-[44px] px-4 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] placeholder-[var(--muted)] focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--focus)] focus:outline-none font-mono uppercase"
+                  />
+                  {(utrValidation.error || utrError) && (
+                    <p className="mt-1 text-sm text-red-500">{utrError ?? utrValidation.error}</p>
+                  )}
                 </div>
+                <button
+                  type="button"
+                  onClick={handleConfirmPayment}
+                  disabled={!canConfirmUtr || isVerifying}
+                  className="w-full rounded-xl py-4 text-lg font-semibold bg-[var(--green)] text-white hover:bg-[var(--green-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  I have paid
+                </button>
+              </div>
+
+              {/* 5. Change method - order-5 on mobile, left col on desktop */}
+              <div className="order-5 w-full lg:col-span-1 lg:col-start-1 lg:row-start-4">
+                <button
+                  type="button"
+                  onClick={handleChangeMethod}
+                  className="block w-full text-center text-[var(--green)] text-sm hover:underline mt-2"
+                >
+                  Change method
+                </button>
               </div>
             </div>
-          </div>
           </>
         ) : null}
 
         {isVerifying && (
           <LoadingOverlay message="Wait, payment processing…" />
         )}
+
+        <SuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+        />
       </div>
     </motion.div>
   );

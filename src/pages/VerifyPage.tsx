@@ -1,16 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ROUTES } from '../routes/paths';
+import { useSearchParams } from 'react-router-dom';
 import { useBridgeStore } from '../store/bridgeStore';
+import { SuccessModal } from '../components/SuccessModal';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import type { ReferenceType } from '../store/types';
 
 export function VerifyPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const txIdParam = searchParams.get('txId');
   const [localError, setLocalError] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const order = useBridgeStore((s) => s.order);
   const merchantHistory = useBridgeStore((s) => s.merchantHistory);
@@ -97,8 +97,7 @@ export function VerifyPage() {
 
     const result = await verifyReference();
     if (result.success) {
-      await new Promise((r) => setTimeout(r, 50));
-      navigate(ROUTES.BRIDGE.SUCCESS, { replace: true });
+      setShowSuccessModal(true);
     } else {
       setLocalError(result.error ?? 'Verification failed');
     }
@@ -205,6 +204,11 @@ export function VerifyPage() {
           </form>
         </div>
       </motion.div>
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
 
       {isVerifying && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm">

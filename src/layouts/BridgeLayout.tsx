@@ -10,7 +10,6 @@ const BRIDGE_ROUTE_CONFIG: Record<string, { step: number; fallbackTo: string }> 
   [ROUTES.BRIDGE.COOLING_SELECT]: { step: 2, fallbackTo: ROUTES.BRIDGE.BENEFICIARY },
   [ROUTES.BRIDGE.COOLING]: { step: 2, fallbackTo: ROUTES.MERCHANT.HISTORY },
   [ROUTES.BRIDGE.VERIFY]: { step: 2, fallbackTo: ROUTES.MERCHANT.HISTORY },
-  [ROUTES.BRIDGE.SUCCESS]: { step: 3, fallbackTo: ROUTES.MERCHANT.HISTORY },
   [ROUTES.BRIDGE.EXPIRED]: { step: 2, fallbackTo: ROUTES.MERCHANT.HISTORY },
 };
 
@@ -35,7 +34,7 @@ export function BridgeLayout() {
           <BackButton fallbackTo={fallbackTo} className="mb-0 text-sm text-[var(--muted)] hover:text-[var(--green)] hover:underline inline-flex items-center gap-1 transition-colors" />
         </div>
         <div className="mt-4">
-          <StepIndicator current={step} total={3} />
+          <StepIndicator current={step} total={2} />
         </div>
       </header>
       <main className="px-4 lg:px-10 pt-4 pb-12">

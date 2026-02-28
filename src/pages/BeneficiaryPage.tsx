@@ -5,6 +5,7 @@ import { useBridgeStore } from '../store/bridgeStore';
 import { SINGLE_BANK_BENEFICIARY } from '../api/mockData';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { PaymentAmountCard, PaymentBeneficiaryCard, PaymentVerificationBlock } from '../components/payment';
+import { SuccessModal } from '../components/SuccessModal';
 import { validateReference, normalizeReference } from '../utils/referenceValidation';
 import { ROUTES } from '../routes/paths';
 
@@ -24,6 +25,7 @@ export function BeneficiaryPage() {
   const [brnError, setBrnError] = useState<string | null>(null);
   const [touchedBrn, setTouchedBrn] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const order = useBridgeStore((s) => s.order);
   const { usdtAmount, inrAmount, paymentMethod } = order;
@@ -80,7 +82,7 @@ export function BeneficiaryPage() {
     try {
       const result = await verifyReference();
       if (result.success) {
-        navigate(ROUTES.BRIDGE.SUCCESS, { replace: true });
+        setShowSuccessModal(true);
       } else {
         setBrnError('Incorrect BRN');
       }
@@ -152,7 +154,7 @@ export function BeneficiaryPage() {
                 canConfirm={canConfirmBrn}
                 isVerifying={isVerifying}
                 onConfirm={handleConfirmPayment}
-                buttonLabel="Confirm Payment"
+                buttonLabel="I have paid"
               />
               <button
                 type="button"
@@ -200,6 +202,11 @@ export function BeneficiaryPage() {
       </div>
 
       {isVerifying && <LoadingOverlay message="Wait, payment processing…" />}
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </motion.div>
   );
 }

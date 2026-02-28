@@ -28,3 +28,43 @@ export function formatReceiptDate(ts: number): string {
   const s = String(d.getSeconds()).padStart(2, '0');
   return `${day}/${month}/${year}, ${h}:${m}:${s}`;
 }
+
+export function formatReceiptText(order: {
+  orderId: string;
+  createdAt: number;
+  paymentMethod: string | null;
+  purchasedUsdt?: number;
+  usdtAmount: number;
+  inrAmount: number;
+  expectedInrAmount?: number;
+  exchangeRate: number;
+  referenceType: string | null;
+  referenceNumber: string;
+  coolingMinutes: number | null;
+  selectedBeneficiary?: { displayName: string; bankName: string; accountNumberMasked: string; ifsc: string } | null;
+}): string {
+  const lines: string[] = [
+    '=== Transaction Receipt ===',
+    `Order ID: ${order.orderId}`,
+    `Date/Time: ${formatReceiptDate(order.createdAt)}`,
+    `Payment Method: ${order.paymentMethod === 'UPI' ? 'UPI' : 'IMPS/RTGS/NEFT'}`,
+  ];
+  if (order.paymentMethod === 'BANK' && order.selectedBeneficiary) {
+    const b = order.selectedBeneficiary;
+    lines.push(`Beneficiary: ${b.displayName}`);
+    lines.push(`Bank: ${b.bankName}`);
+    lines.push(`Account: ${b.accountNumberMasked}`);
+    lines.push(`IFSC: ${b.ifsc}`);
+  }
+  lines.push(
+    `USDT Purchased: ${order.purchasedUsdt || order.usdtAmount} USDT`,
+    `Exchange Rate: 1 USDT = ₹${order.exchangeRate}`,
+    `INR Paid: ₹${(order.inrAmount || order.expectedInrAmount || 0).toLocaleString('en-IN')}`,
+    `Reference Type: ${order.referenceType ?? '—'}`,
+    `Reference Number: ${order.referenceNumber || '—'}`,
+    `Status: Verified`,
+    `Cooling Period: ${formatCoolingLabel(order.coolingMinutes)}`,
+    '30% fee applies (for wallet withdrawal)',
+  );
+  return lines.join('\n');
+}
