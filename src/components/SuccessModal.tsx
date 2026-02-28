@@ -60,7 +60,6 @@ interface SuccessModalProps {
   onClose: () => void;
 }
 
-const MERCHANT_REDIRECT_URL = 'http://localhost:5173/merchant';
 
 export function SuccessModal({ isOpen, onClose }: SuccessModalProps) {
   const order = useBridgeStore((s) => s.order);
@@ -99,7 +98,7 @@ export function SuccessModal({ isOpen, onClose }: SuccessModalProps) {
   const handleSendToMerchant = () => {
     touch();
     onClose();
-    window.location.href = MERCHANT_REDIRECT_URL;
+    window.location.href = `${window.location.origin}/merchant`;
   };
 
   const handleWithdrawToWallet = () => {

@@ -33,7 +33,7 @@ export function BridgeLayout() {
         <div className="mt-6">
           <BackButton
             fallbackTo={fallbackTo}
-            forceRedirectTo={location.pathname === ROUTES.BRIDGE.EXPLAIN ? 'http://localhost:5173/merchant/history' : undefined}
+            forceRedirectTo={location.pathname === ROUTES.BRIDGE.EXPLAIN ? `${window.location.origin}/merchant/history` : undefined}
             className="mb-0 text-sm text-[var(--muted)] hover:text-[var(--green)] hover:underline inline-flex items-center gap-1 transition-colors"
           />
         </div>
