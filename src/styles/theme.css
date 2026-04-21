@@ -1,0 +1,25 @@
+/**
+ * Light theme tokens for Fastpikeswop Crypto-Bridge
+ * Matches Pikeswop-style: white surfaces, soft gray borders, green accent
+ */
+:root {
+  --bg: #F7F8FB;
+  --surface: #FFFFFF;
+  --border: #E6EAF0;
+  --text: #111827;
+  --muted: #6B7280;
+  --green: #7CB342;
+  --green-hover: #689F38;
+  --focus: rgba(124, 179, 66, 0.35);
+  --shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+  --radius: 16px;
+  /* Status pill backgrounds */
+  --success-bg: #E8F5E9;
+  --success-text: #2E7D32;
+  --failed-bg: #FEE2E2;
+  --failed-text: #B91C1C;
+  --pending-bg: #FEF3C7;
+  --pending-text: #B45309;
+  --verify-bg: #DBEAFE;
+  --verify-text: #1D4ED8;
+}
