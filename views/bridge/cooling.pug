@@ -1,0 +1,26 @@
+extends _layout
+
+block bridgeContent
+  div(class="w-full pt-0 pb-8")
+    div(class="mx-auto max-w-3xl px-4 sm:px-6")
+      p(data-cooling-resume-banner, class="hidden mb-4 px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm")
+        | Cooling in progress — resumed from Transaction History
+      h1(class="mt-2 mb-6 text-2xl font-semibold text-gray-900") Cooling Period
+      div(data-cooling-body)
+        div(class="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-6 shadow-[var(--shadow)]")
+          p(class="text-[var(--text)] text-sm") You can go back to merchant. This transaction will stay Pending until cooling ends.
+        div(data-cooling-active, class="space-y-6")
+          div(class="text-center py-6")
+            p(data-cooling-timer, class="text-4xl font-mono font-bold text-[var(--green)]") 0:00
+            p(class="text-[var(--muted)] mt-2") Time remaining
+          div(class="flex flex-col items-center gap-3")
+            button(type="button", data-cooling-goto-merchant,
+              class="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)]") Go to Merchant
+            p(class="text-[var(--muted)] text-sm text-center") Or stay here and wait for the countdown
+        div(data-cooling-done, class="hidden space-y-4")
+          div(data-cooling-done-toast, class="hidden p-4 rounded-xl bg-[var(--surface)] border border-[var(--green)] text-[var(--green)] shadow-[var(--shadow)]") Cooling ended. Please verify payment.
+          div(class="flex flex-col items-center gap-3")
+            button(type="button", data-cooling-verify,
+              class="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)]") Verify Payment
+            button(type="button", data-cooling-goto-merchant,
+              class="min-h-[44px] w-full sm:max-w-md sm:px-8 rounded-xl border border-[var(--border)] text-[var(--text)] hover:bg-gray-100") Go to Merchant

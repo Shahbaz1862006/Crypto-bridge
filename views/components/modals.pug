@@ -1,0 +1,107 @@
+//- All modals rendered hidden; opened/closed by JS via [data-modal]
+//- Structure:
+//-   <div data-modal="id" class="... hidden">
+//-     <div class="... backdrop"><div class="... panel">...</div></div>
+//-   </div>
+
+mixin closeButton(label)
+  button(type="button", data-modal-close, aria-label=label || "Close",
+    class="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-gray-100 transition-colors")
+    svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+      path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+
+//- Loading overlay (fullscreen spinner with message)
+div(data-modal="loading-overlay",
+    class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-[rgba(17,24,39,0.35)] backdrop-blur-sm")
+  div(class="w-12 h-12 border-4 border-[var(--border)] border-t-[var(--green)] rounded-full animate-spin")
+  p(class="mt-4 text-[var(--text)] text-lg", data-loading-message) Processing…
+
+//- Failed modal (shared for payment verification fail)
+div(data-modal="failed-modal",
+    class="hidden fixed inset-0 z-[55] flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm",
+    role="dialog", aria-modal="true")
+  div(data-modal-backdrop,
+      class="w-full max-w-md rounded-xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-[var(--shadow)]")
+    h2(class="text-xl font-semibold text-[var(--text)] mb-2") Payment Failed
+    p(class="text-[var(--text)] text-sm mb-1") The entered TxID / UTR / BRN is invalid or could not be verified.
+    p(class="text-[var(--muted)] text-sm mb-6") Please check the reference number and try again.
+    div(class="flex flex-col gap-2")
+      button(type="button", data-failed-retry,
+        class="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] transition-colors") Try Again
+      button(type="button", data-failed-change-method,
+        class="min-h-[44px] w-full rounded-xl border border-[var(--border)] text-[var(--muted)] hover:bg-gray-100 transition-colors") Change Method
+
+//- Success modal (with embedded receipt)
+div(data-modal="success-modal",
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm overflow-y-auto",
+    role="dialog", aria-modal="true")
+  div(data-modal-backdrop,
+      class="relative w-full max-w-5xl rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow)] overflow-hidden my-8")
+    button(type="button", data-modal-close, aria-label="Close",
+      class="absolute top-4 right-4 z-10 p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-gray-100 transition-colors")
+      svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+        path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+    div(class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 lg:p-8")
+      div(class="lg:col-span-5 flex flex-col")
+        h2(class="text-2xl font-semibold text-[var(--text)] mb-2") Success
+        p(class="text-[var(--muted)] mb-2")
+          | You have successfully purchased&nbsp;
+          span(data-success-amount) 0
+          |  USDT.
+        p(class="text-[var(--text)] mb-4") What would you like to do next?
+        div(class="flex flex-col gap-2")
+          button(type="button", data-success-send,
+            class="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] disabled:opacity-70 disabled:cursor-not-allowed transition-colors") Send to Merchant
+          button(type="button", data-success-withdraw,
+            class="min-h-[44px] w-full rounded-xl border-2 border-[var(--green)] text-[var(--green)] font-semibold hover:bg-[var(--green)]/10 disabled:opacity-70 disabled:cursor-not-allowed transition-colors") Withdraw to personal wallet
+      div(class="lg:col-span-7")
+        div(data-receipt-card, class="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden shadow-[var(--shadow)]")
+          div(class="px-4 py-2 rounded-t-xl border-b border-[var(--border)]")
+            h3(class="text-lg font-semibold text-[var(--text)]") Receipt
+          div(data-receipt-rows, class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4 text-sm")
+          div(class="px-4 py-2 border-t border-[var(--border)] flex flex-wrap gap-2")
+            button(type="button", data-receipt-copy,
+              class="px-4 py-2 rounded-lg bg-gray-100 text-[var(--text)] text-sm font-medium hover:bg-gray-200 transition-colors inline-flex items-center gap-2") Copy receipt
+            button(type="button", data-receipt-pdf,
+              class="px-4 py-2 rounded-lg border border-[var(--border)] text-[var(--muted)] text-sm font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2") Download PDF
+
+//- Wallet withdraw confirm
+div(data-modal="withdraw-modal",
+    class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm",
+    role="dialog", aria-modal="true")
+  div(data-modal-backdrop,
+      class="w-full max-w-md lg:max-w-lg rounded-xl bg-[var(--surface)] border border-[var(--border)] p-6 shadow-[var(--shadow)]")
+    h2(class="text-xl font-semibold text-[var(--text)] mb-4") Withdraw to personal wallet
+    div(class="text-[var(--muted)] text-sm mb-6 space-y-4")
+      p(class="text-sm") If you withdraw to your personal wallet, a 30% withdrawal fee will be deducted from your purchased USDT.
+      div(class="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 space-y-3 text-sm")
+        div(class="flex justify-between items-baseline")
+          span(class="text-[var(--muted)]") Purchased Amount:
+          span(class="text-[var(--text)] font-medium", data-withdraw-purchased) 0 USDT
+        div(class="flex justify-between items-baseline")
+          span(class="text-[var(--muted)]") 30% Withdrawal Fee:
+          span(class="text-red-600 font-medium", data-withdraw-fee) - 0 USDT
+        div(class="border-t border-[var(--border)] pt-3 mt-3")
+          div(class="flex justify-between items-baseline")
+            span(class="text-[var(--muted)]") Final Amount You Will Receive:
+            span(class="text-[var(--green)] font-bold", data-withdraw-final) 0 USDT
+    div(class="flex flex-col gap-2")
+      button(type="button", data-withdraw-confirm,
+        class="min-h-[44px] w-full rounded-xl bg-[var(--green)] text-white font-semibold hover:bg-[var(--green-hover)] disabled:opacity-70 disabled:cursor-not-allowed") Continue with withdrawal
+      button(type="button", data-modal-close,
+        class="min-h-[44px] w-full rounded-xl border border-[var(--border)] text-[var(--muted)] hover:bg-gray-100 disabled:opacity-70") Cancel
+
+//- Tx detail modal (merchant history row click)
+div(data-modal="detail-modal",
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-[rgba(17,24,39,0.35)] backdrop-blur-sm",
+    role="dialog", aria-modal="true")
+  div(data-modal-backdrop,
+      class="w-full max-w-[min(1100px,95vw)] max-h-[min(90vh,900px)] flex flex-col rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow)] overflow-hidden")
+    div(class="flex items-center justify-between px-6 py-4 border-b border-[var(--border)] shrink-0")
+      h2(class="text-xl font-semibold text-[var(--text)]", data-detail-title) Transaction Details
+      +closeButton("Close")
+    div(data-detail-body, class="flex-1 overflow-y-auto p-6")
+
+//- Copy/pdf toasts
+div(data-toast="pdf", class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm shadow-[var(--shadow)]") PDF generated
+div(data-toast="copy", class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] px-4 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] text-sm shadow-[var(--shadow)]") Receipt copied

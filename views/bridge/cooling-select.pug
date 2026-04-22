@@ -1,0 +1,15 @@
+extends _layout
+
+block bridgeContent
+  div(class="w-full pt-0 pb-8")
+    h1(class="text-2xl font-semibold text-[var(--text)] mb-2") Select Cooling Period
+    p(class="text-[var(--muted)] mb-6") Some banks may require a cooling period for first-time beneficiary transfers.
+    div(class="space-y-2 mb-6")
+      button(type="button", data-cooling-none,
+        class="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] flex items-center justify-between shadow-[var(--shadow)]")
+        span None
+        span(class="text-[var(--green)] text-sm") Skip cooling
+      each mins in [5, 30, 60, 120, 1440]
+        button(type="button", data-cooling-mins=mins,
+          class="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] shadow-[var(--shadow)]")
+          = mins < 60 ? `${mins} min` : (mins === 60 ? '1 hr' : (mins === 120 ? '2 hr' : (mins === 1440 ? '24 hr' : `${mins / 60} hr`)))

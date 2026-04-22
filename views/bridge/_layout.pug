@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  div(class="w-full")
+    header(class="px-4 lg:px-10 pt-6 pb-4")
+      div(class="text-lg font-semibold text-[var(--text)]") Fastpikeswop
+      div(class="mt-6")
+        a(
+          href="#",
+          data-back-button,
+          data-fallback=bridgeFallback,
+          class="mb-0 text-sm text-[var(--muted)] hover:text-[var(--green)] hover:underline inline-flex items-center gap-1 transition-colors"
+        ) ← Back
+      unless hideStepper
+        div(class="mt-4")
+          div(class="flex items-center gap-2", role="status", aria-label=`Step ${bridgeStep} of 2`)
+            span(class="text-sm text-[var(--muted)]") Step #{bridgeStep} of 2
+            div(class="flex gap-1.5")
+              - for (var i = 0; i < 2; i++)
+                if i < bridgeStep - 1
+                  div(class="w-2 h-2 rounded-full transition-colors bg-[var(--green)] opacity-60")
+                else if i === bridgeStep - 1
+                  div(class="w-2 h-2 rounded-full transition-colors bg-[var(--green)]")
+                else
+                  div(class="w-2 h-2 rounded-full transition-colors bg-[var(--border)]")
+    main(class="px-4 lg:px-10 pt-4 pb-12")
+      block bridgeContent

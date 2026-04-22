@@ -1,0 +1,9 @@
+extends _layout
+
+block merchantContent
+  div(class="flex flex-col min-h-[60vh] justify-center items-center px-6")
+    h1(class="text-2xl font-semibold text-[var(--text)] mb-12 self-start") Merchant
+    button(type="button", data-deposit-cta,
+      class="min-h-[52px] px-12 rounded-xl bg-white text-[var(--green)] font-semibold text-lg border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3")
+      img(src="/assets/pikeswop-icon.png", alt="Fastpikeswop", class="h-8 w-auto object-contain shrink-0")
+      span Deposit via Fastpikeswop

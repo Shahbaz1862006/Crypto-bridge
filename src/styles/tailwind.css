@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@source "../../views/**/*.pug";
+@source "../../public/js/**/*.js";
+
+@import "./theme.css";
+
+@theme {
+  --color-primary: #7CB342;
+  --font-sans: 'Poppins', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+}

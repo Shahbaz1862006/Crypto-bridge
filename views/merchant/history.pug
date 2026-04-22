@@ -1,0 +1,28 @@
+extends _layout
+
+block merchantContent
+  div(class="w-full px-4 sm:px-6 pt-4 pb-10")
+    header(class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between")
+      div
+        h1(class="text-2xl sm:text-3xl font-semibold text-[var(--text)]") Merchant — Transactions
+        p(class="text-sm text-[var(--muted)]") Review recent settlements and deposits.
+      button(type="button", data-deposit-cta,
+        class="inline-flex items-center justify-center gap-3 min-h-[44px] px-6 rounded-xl bg-white text-[var(--green)] font-semibold border border-gray-200 shadow-sm hover:shadow-md hover:bg-gray-50 transition")
+        img(src="/assets/pikeswop-icon.png", alt="Fastpikeswop", class="h-6 w-auto object-contain shrink-0")
+        span Deposit via Fastpikeswop
+    section(class="rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow)] overflow-hidden")
+      div(class="max-h-[60vh] overflow-y-auto")
+        table(class="min-w-full text-sm")
+          thead(class="bg-gray-50 border-b border-[var(--border)] sticky top-0")
+            tr
+              th(class="px-4 py-3 text-left font-medium text-[var(--muted)]") When
+              th(class="px-4 py-3 text-left font-medium text-[var(--muted)]") Method
+              th(class="px-4 py-3 text-right font-medium text-[var(--muted)]") USDT
+              th(class="px-4 py-3 text-right font-medium text-[var(--muted)]") INR
+              th(class="px-4 py-3 text-left font-medium text-[var(--muted)]") Status
+              th(class="px-4 py-3 text-left font-medium text-[var(--muted)]") Cooling
+              th(class="px-4 py-3 text-left font-medium text-[var(--muted)]") Ref
+              th(class="px-4 py-3 text-right font-medium text-[var(--muted)]") Actions
+          tbody(data-history-body, class="divide-y divide-[var(--border)]")
+            tr(data-history-empty)
+              td(colspan="8", class="px-4 py-8 text-center text-[var(--muted)]") No transactions yet.
