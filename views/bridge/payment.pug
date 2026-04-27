@@ -8,8 +8,8 @@ block bridgeContent
         h1(class="text-2xl font-semibold text-[var(--text)] mb-4") Deposit & Payment
         div(class="space-y-4")
           div(class="w-full p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-between gap-4 shadow-[var(--shadow)]")
-            span(class="text-2xl font-bold text-[var(--text)]") 60 USDT
-            span(class="text-2xl font-bold text-[var(--text)]") ≈ ₹4,980 INR
+            span(class="text-2xl font-bold text-[var(--text)]")= mock.bridge.usdt.display
+            span(class="text-2xl font-bold text-[var(--text)]")= mock.bridge.inr.displayWithCurrency
           div(class="flex flex-col gap-3")
             button(type="button", data-pay-upi,
               class="w-full flex items-center gap-4 p-4 rounded-xl bg-[var(--surface)] border-2 border-[var(--border)] hover:border-[var(--green)] transition-colors text-left shadow-[var(--shadow)]")
@@ -31,34 +31,34 @@ block bridgeContent
         h1(class="text-2xl font-semibold text-[var(--text)] mb-4") Deposit & Payment
         div(class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6 lg:gap-8 items-start w-full")
           div(class="order-1 w-full flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-4 shadow-[var(--shadow)] lg:col-span-1 lg:col-start-1 lg:row-start-1")
-            span(class="text-2xl font-semibold text-[var(--text)]") 60 USDT
-            span(class="text-2xl font-semibold text-[var(--text)]") ≈ ₹4,980 INR
+            span(class="text-2xl font-semibold text-[var(--text)]")= mock.bridge.usdt.display
+            span(class="text-2xl font-semibold text-[var(--text)]")= mock.bridge.inr.displayWithCurrency
           div(class="order-2 w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow)] lg:col-span-1 lg:col-start-1 lg:row-start-2")
             h3(class="text-[var(--text)] font-medium mb-2") Beneficiary Details
             div(class="space-y-1.5")
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") Beneficiary Name:
-                span(class="text-[var(--text)]") Rapido Gate Collections
+                span(class="text-[var(--text)]")= mock.bridge.upiBeneficiary.name
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") Bank Name:
-                span(class="text-[var(--text)]") HDFC Bank
+                span(class="text-[var(--text)]")= mock.bridge.upiBeneficiary.bankName
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") UPI ID:
-                span(class="text-[var(--text)] font-mono") rapidogate@hdfc
-                button(type="button", data-copy="rapidogate@hdfc", aria-label="Copy",
+                span(class="text-[var(--text)] font-mono")= mock.bridge.upiBeneficiary.upiId
+                button(type="button", data-copy=mock.bridge.upiBeneficiary.upiId, aria-label="Copy",
                   class="inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--green)] transition-colors")
                   svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
                     path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z")
           div(class="order-3 lg:order-3 lg:col-span-1 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:sticky lg:top-6 lg:self-start w-full")
             div(class="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 flex flex-col shadow-[var(--shadow)]")
               p(class="text-[var(--text)] font-medium mb-1") Scan to pay
-              p(class="text-[var(--muted)] text-sm mb-4") Amount: ₹4,980
+              p(class="text-[var(--muted)] text-sm mb-4") Amount: #{mock.bridge.inr.display}
               div(class="w-full rounded-lg border border-[var(--border)] bg-white p-4 flex items-center justify-center")
                 div(data-upi-qr, class="w-[320px] h-[320px] flex items-center justify-center mx-auto shrink-0")
               div(class="mt-4 flex items-center justify-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") UPI ID:
-                span(class="text-[var(--green)] font-mono text-sm") rapidogate@hdfc
-                button(type="button", data-copy="rapidogate@hdfc", aria-label="Copy",
+                span(class="text-[var(--green)] font-mono text-sm")= mock.bridge.upiBeneficiary.upiId
+                button(type="button", data-copy=mock.bridge.upiBeneficiary.upiId, aria-label="Copy",
                   class="inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--green)] transition-colors")
                   svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
                     path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z")

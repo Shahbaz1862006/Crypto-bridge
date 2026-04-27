@@ -8,28 +8,28 @@ block bridgeContent
       div(class="grid grid-cols-1 lg:grid-cols-12 gap-6")
         div(class="lg:col-span-7 flex flex-col gap-4")
           div(class="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-between gap-4 shadow-[var(--shadow)]")
-            span(class="text-2xl font-bold text-[var(--text)]", data-ben-usdt) 60 USDT
-            span(class="text-2xl font-bold text-[var(--text)]", data-ben-inr) ≈ ₹4,980 INR
+            span(class="text-2xl font-bold text-[var(--text)]", data-ben-usdt)= mock.bridge.usdt.display
+            span(class="text-2xl font-bold text-[var(--text)]", data-ben-inr)= mock.bridge.inr.displayWithCurrency
           div(class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] cursor-default shadow-[var(--shadow)]")
             h3(class="text-[var(--text)] font-medium mb-2") Beneficiary Details
             div(class="space-y-1.5")
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") Beneficiary Name:
-                span(class="text-[var(--text)]") Rapido Gate Collections
+                span(class="text-[var(--text)]")= mock.bridge.bankBeneficiary.name
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") Bank Name:
-                span(class="text-[var(--text)]") HDFC Bank
+                span(class="text-[var(--text)]")= mock.bridge.bankBeneficiary.bankName
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") Account Number:
-                span(class="text-[var(--text)] font-mono") 123456789012
-                button(type="button", data-copy="123456789012", aria-label="Copy",
+                span(class="text-[var(--text)] font-mono")= mock.bridge.bankBeneficiary.accountNumber
+                button(type="button", data-copy=mock.bridge.bankBeneficiary.accountNumber, aria-label="Copy",
                   class="inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--green)] transition-colors")
                   svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
                     path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z")
               div(class="flex items-center gap-2 flex-wrap")
                 span(class="text-[var(--muted)] text-sm") IFSC:
-                span(class="text-[var(--text)] font-mono") HDFC0001234
-                button(type="button", data-copy="HDFC0001234", aria-label="Copy",
+                span(class="text-[var(--text)] font-mono")= mock.bridge.bankBeneficiary.ifsc
+                button(type="button", data-copy=mock.bridge.bankBeneficiary.ifsc, aria-label="Copy",
                   class="inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--green)] transition-colors")
                   svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
                     path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z")

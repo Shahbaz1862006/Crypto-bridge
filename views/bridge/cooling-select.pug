@@ -9,7 +9,7 @@ block bridgeContent
         class="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] flex items-center justify-between shadow-[var(--shadow)]")
         span None
         span(class="text-[var(--green)] text-sm") Skip cooling
-      each mins in [5, 30, 60, 120, 1440]
+      each mins in mock.bridge.coolingOptions
         button(type="button", data-cooling-mins=mins,
           class="w-full min-h-[44px] px-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--green)] text-left text-[var(--text)] shadow-[var(--shadow)]")
           = mins < 60 ? `${mins} min` : (mins === 60 ? '1 hr' : (mins === 120 ? '2 hr' : (mins === 1440 ? '24 hr' : `${mins / 60} hr`)))

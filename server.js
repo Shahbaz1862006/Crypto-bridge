@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const mock = require('./data/mockData');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ function render(res, view, locals = {}) {
   res.render(view, {
     ROUTES,
     page: view,
+    mock,
     ...locals,
   });
 }
